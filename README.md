@@ -10,7 +10,7 @@ It can talk to TP-Link TL-SG105E, SG108E (and probably others) via the web inter
 
 When everything looks correct, remove the ``--dry-run`` option and let the software do it's magic.
 
-###Example configuration
+### Example configuration
 ```yaml
 default-vlan: Main
 switches:
@@ -65,7 +65,7 @@ vlans:
 ```
 
 
-###Advantages
+### Advantages
 - Support for super cheap (25€) switches
 - Way more usable and less error-prone than the web interface
 - Adding/changing a VLAN doesn't require manual work anymore
@@ -75,14 +75,14 @@ vlans:
 - YAML configuration can have port descriptions (web interface for TL-SG10x doesn't)
 - Automatic PVID handling (PVIDs are the same as the untagged VLAN ID in 99.9% of cases)
 
-###Disadvantages
+### Disadvantages
 - Security of TP-Link Managed Switches is abysmal
 - No seperate management connectivity, VLAN 1 / untagged always needs to be reachable
 - Only physical ports are supported, no LAG/virtual port support
 - Only VLAN configuration supported, no STP, multicast, etc. configuration
 - There's no atomicity to the network changes, the cheap switches don't support anything like that. 
 
-###Known issues / quirks
+### Known issues / quirks
 - VLAN names, destination identifiers, etc. should be case-insensitive, matching might not work 100% for UTF-8 characters. When in doubt, use ASCII names/identifiers or be binary-perfect.
 - Omission of certain config properties might lead to crashes. Please report or send PRs.
 - This tool was designed for my own personal use, it might not suit your use-case. Read the dry-run output carefully!
