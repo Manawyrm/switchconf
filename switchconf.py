@@ -94,10 +94,10 @@ def load_switch_backends(config):
     for switch_name in config['switches']:
         switch_type = config['switches'][switch_name]['type']
         # and try to load the switch type as a python module with the same name in the backends-folder
-        #try:
-        switch_backend_module = importlib.import_module("backends." + switch_type.upper())
-        #except ImportError:
-        #    raise Exception(f"Switch backend for type {switch_type} not found!")
+        try:
+            switch_backend_module = importlib.import_module("backends." + switch_type.upper())
+        except ImportError:
+            raise Exception(f"Switch backend for type {switch_type} not found!")
 
         switch_backend_class = getattr(switch_backend_module, switch_type.upper())
 
@@ -133,9 +133,10 @@ def main(config, dry_run):
     parse_config(config)
     switch_backends = load_switch_backends(config)
 
-    #print(yaml.safe_dump(config, sort_keys=False, default_style=None, default_flow_style=False))
     if not dry_run:
         deploy_config(switch_backends, config)
+    else:
+        print(yaml.safe_dump(config, sort_keys=False, default_style=None, default_flow_style=False))
 
 if __name__ == '__main__':
     main()
