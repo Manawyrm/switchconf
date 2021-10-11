@@ -6,7 +6,7 @@ VLANs are useful, but managing VLANs even on proper networking hardware can be c
 It can talk to TP-Link TL-SG105E, SG108E (and probably others) via the web interface.
 
 ### Usage
-```python3 switchconf.py --config mynetwork.yaml --dry-run```  
+```./switchconf.py --config mynetwork.yaml --dry-run```  
 
 When everything looks correct, remove the ``--dry-run`` option and let the software do it's magic.
 
@@ -16,7 +16,7 @@ default-vlan: Main
 switches:
   Switch-Upstairs:
     ip: switch-upstairs.domain.de
-    type: "tl-sg105e"
+    type: "TLSG105E"
     username: admin
     password: 1234
     description: "Switch-Upstairs"
@@ -39,7 +39,7 @@ switches:
 
   Switch-Downstairs:
     ip: switch-downstairs.domain.de
-    type: "tl-sg105e"
+    type: "TLSG105E"
     username: admin
     password: 1234
     description: "Switch-Downstairs"
@@ -92,7 +92,7 @@ vlans:
 - `switches` - array, list of all switches  
 
 Switches need to have the following properties:  
-`type` - string, e.g. "tl-sg108e", which will call that script in `backends/`.  
+`type` - string, e.g. `TLSG105E`, which will load a module with that name in `backends/`.  
 `ports` - array, containing a list of all ports
 
 Optional properties:  
