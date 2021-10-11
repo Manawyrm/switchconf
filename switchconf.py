@@ -94,31 +94,34 @@ def load_switch_backends(config):
     for switch_name in config['switches']:
         switch_type = config['switches'][switch_name]['type']
         # and try to load the switch type as a python module with the same name in the backends-folder
-        try:
-            switch_backend = importlib.import_module("backends." + switch_type.lower())
-        except ImportError:
-            raise Exception(f"Switch backend for type {switch_type} not found!")
+        #try:
+        switch_backend_module = importlib.import_module("backends." + switch_type.upper())
+        #except ImportError:
+        #    raise Exception(f"Switch backend for type {switch_type} not found!")
+
+        switch_backend_class = getattr(switch_backend_module, switch_type.upper())
 
         # try to connect (this will also validate the credentials hopefully)
         try:
-            switch_backend.test_connection(config['switches'][switch_name])
+            switch_backend_object = switch_backend_class(switch_name, config['switches'][switch_name], config['vlans'])
         except Exception as ex:
             raise Exception(f"Could not connect to {switch_name}, type: {switch_type}! More detail: {repr(ex)}")
 
-        switch_backends[switch_name] = switch_backend
+        switch_backends[switch_name] = switch_backend_object
 
     return switch_backends
 
 
 def deploy_config(switch_backends, config):
     for switch_name in config['switches']:
-        switch_backends[switch_name].deploy_config(config['switches'][switch_name])
+        switch_backends[switch_name].deploy_config(config['switches'][switch_name], config['vlans'])
 
     return
 
 @click.command()
 @click.option('--config', help='Config file')
-@click.option('--dry-run', help='Do a dry-run (try to connect, parse config, don\'t change anything')
+@click.option('--dry-run/--wet-run', default=False,
+              help='Do a dry-run (try to connect, parse config, don\'t change anything')
 def main(config, dry_run):
     with open(config, "r") as config_stream:
         try:
@@ -130,9 +133,9 @@ def main(config, dry_run):
     parse_config(config)
     switch_backends = load_switch_backends(config)
 
-    print(yaml.safe_dump(config, sort_keys=False, default_style=None, default_flow_style=False))
-
-    deploy_config(switch_backends, config)
+    #print(yaml.safe_dump(config, sort_keys=False, default_style=None, default_flow_style=False))
+    if not dry_run:
+        deploy_config(switch_backends, config)
 
 if __name__ == '__main__':
     main()

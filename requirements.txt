@@ -1,3 +1,5 @@
 pyyaml
 importlib
 click
+requests
+hjson

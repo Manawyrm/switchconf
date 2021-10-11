@@ -143,3 +143,4 @@ cython_debug/
 
 # switchconf configuration files used by myself
 alfeld.yaml
+kiel.yaml
