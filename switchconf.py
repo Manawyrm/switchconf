@@ -31,6 +31,13 @@ def get_switch_port_config(port_name, port_config, switch_default_vlan, vlans_by
 
         # and use the default VLAN as the PVID
         port_config['pvid'] = get_vlan_id_by_name(switch_default_vlan, vlans_by_name)
+
+        if 'vlan' in port_config:
+            # Admin has configured an additional untagged VLAN on this tagged port
+            port_config['untagged-vlan-id'] = get_vlan_id_by_name(port_config['vlan'], vlans_by_name)
+            port_config['tagged-vlan-ids'].remove(port_config['untagged-vlan-id'])
+            port_config['pvid'] = port_config['untagged-vlan-id']
+
     elif port_config['type'] == "tagged":
         port_config['tagged-vlan-ids'] = []
         for vlan_name in port_config['vlans']:
