@@ -3,3 +3,5 @@ importlib
 click
 requests
 hjson
+N2G
+python-igraph
